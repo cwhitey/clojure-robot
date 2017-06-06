@@ -1,7 +1,8 @@
 (ns clojure-robot.core-test
   (:require [clojure.test :refer :all]
-            [clojure-robot.core :refer :all]))
+            [clojure-robot.core :refer :all]
+            [clojure-robot.robot :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest robot 
+  (testing "placement"
+    (is (= (place 0 0 :SOUTH) {:x 0 :y 0 :d :SOUTH}))))
