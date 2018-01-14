@@ -1,19 +1,19 @@
 (ns clojure-robot.robot)
 
-(def left-map {:north :west
-               :west  :south
-               :south :east
-               :east  :north})
+(def ^:private left-map {:north :west
+                         :west  :south
+                         :south :east
+                         :east  :north})
 
-(def right-map {:west  :north
-                :south :west
-                :east  :south
-                :north :east})
+(def ^:private right-map {:west  :north
+                          :south :west
+                          :east  :south
+                          :north :east})
 
-(defn within-edge? [num]
+(defn ^:private within-edge? [num]
   (and (>= num 0) (<= num 4)))
 
-(defn valid-placement? [placement]
+(defn ^:private valid-placement? [placement]
   (let [{:keys [x y]} placement]
     (every? within-edge? [x y])))
 
@@ -39,3 +39,7 @@
     (if (valid-placement? new-pos)
       new-pos
       robot)))
+
+(defn report [robot]
+  (let [{:keys [x y direction]} robot]
+    (println (str "x: " x ", y: " y "dir: " direction))))
