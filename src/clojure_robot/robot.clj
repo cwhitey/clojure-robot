@@ -5,9 +5,9 @@
                :south :east
                :east  :north})
 
-(def right-map {:west :north
+(def right-map {:west  :north
                 :south :west
-                :east :south
+                :east  :south
                 :north :east})
 
 (defn within-edge? [num]
@@ -27,11 +27,15 @@
 (defn right [robot]
   (update robot :direction #(get right-map %)))
 
+(defn ^:private move-unsafe [robot]
+  (case (:direction robot)
+    :north (update robot :y inc)
+    :east  (update robot :x inc)
+    :south (update robot :y dec)
+    :west  (update robot :x dec)))
+
 (defn move [robot]
-  (let [{:keys [x y direction]} robot
-        new-pos (case direction
-                  :north (update robot :y inc)
-                  :east  (update robot :x inc)
-                  :south (update robot :y dec)
-                  :west  (update robot :x dec))]
-    (if (valid-placement? new-pos) new-pos)))
+  (let [new-pos (move-unsafe robot)]
+    (if (valid-placement? new-pos)
+      new-pos
+      robot)))
