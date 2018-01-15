@@ -1,45 +1,46 @@
 (ns clojure-robot.robot)
 
-(def ^:private left-map {:north :west
-                         :west  :south
-                         :south :east
-                         :east  :north})
+(def left-map {:north :west
+               :west  :south
+               :south :east
+               :east  :north})
 
-(def ^:private right-map {:west  :north
-                          :south :west
-                          :east  :south
-                          :north :east})
+(def right-map {:west  :north
+                :south :west
+                :east  :south
+                :north :east})
 
-(defn ^:private within-edge? [num]
-  (and (>= num 0) (<= num 4)))
+(defn narrow-range [num lower upper]
+  (cond
+    (< num lower) lower
+    (> num upper) upper
+    :else num))
 
-(defn ^:private valid-placement? [placement]
-  (let [{:keys [x y]} placement]
-    (every? within-edge? [x y])))
+(defn narrow [num]
+  (narrow-range num 0 4))
 
-(defn place [x y direction]
-  (let [robot {:x x :y y :d direction}]
-    (when (valid-placement? robot) robot)))
+(defn limit [robot]
+  (-> robot
+       (update :x narrow)
+       (update :y narrow)))
 
-(defn left [robot]
-  (update robot :direction #(get left-map %)))
+(defn place [x y d]
+  (limit {:x x :y y :d d}))
 
-(defn right [robot]
-  (update robot :direction #(get right-map %)))
+(defn turn-left [robot]
+  (update robot :d #(get left-map %)))
 
-(defn ^:private move-unsafe [robot]
-  (case (:direction robot)
-    :north (update robot :y inc)
-    :east  (update robot :x inc)
-    :south (update robot :y dec)
-    :west  (update robot :x dec)))
+(defn turn-right [robot]
+  (update robot :d #(get right-map %)))
 
 (defn move [robot]
-  (let [new-pos (move-unsafe robot)]
-    (if (valid-placement? new-pos)
-      new-pos
-      robot)))
+  (limit
+   (case (:d robot)
+     :north (update robot :y inc)
+     :east  (update robot :x inc)
+     :south (update robot :y dec)
+     :west  (update robot :x dec))))
 
-(defn report [robot]
-  (let [{:keys [x y direction]} robot]
-    (println (str "x: " x ", y: " y "dir: " direction))))
+(defn report-status [robot]
+  (printf "%d,%d,%s\n" (:x robot) (:y robot) (name (:d robot)))
+  robot)

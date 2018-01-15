@@ -1,4 +1,6 @@
 (ns clojure-robot.core
+  (:require
+   [clojure-robot.robot :as robot])
   (:gen-class))
 
 (defn -main
