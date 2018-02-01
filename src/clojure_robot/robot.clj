@@ -1,14 +1,16 @@
 (ns clojure-robot.robot)
 
-(def left-map {:north :west
-               :west  :south
-               :south :east
-               :east  :north})
+(def left-map
+  {:north :west
+   :west  :south
+   :south :east
+   :east  :north})
 
-(def right-map {:west  :north
-                :south :west
-                :east  :south
-                :north :east})
+(def right-map
+  {:west  :north
+   :south :west
+   :east  :south
+   :north :east})
 
 (defn narrow-range [num lower upper]
   (cond
@@ -19,13 +21,13 @@
 (defn narrow [num]
   (narrow-range num 0 4))
 
-(defn limit [robot]
+(defn limit-movement [robot]
   (-> robot
        (update :x narrow)
        (update :y narrow)))
 
 (defn place [x y d]
-  (limit {:x x :y y :d d}))
+  (limit-movement {:x x :y y :d d}))
 
 (defn turn-left [robot]
   (update robot :d #(get left-map %)))
@@ -34,7 +36,7 @@
   (update robot :d #(get right-map %)))
 
 (defn move [robot]
-  (limit
+  (limit-movement
    (case (:d robot)
      :north (update robot :y inc)
      :east  (update robot :x inc)
