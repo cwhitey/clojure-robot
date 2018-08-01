@@ -1,5 +1,7 @@
 (ns clojure-robot.robot)
 
+(def dirs #{:north :east :south :west})
+
 (def left-map
   {:north :west
    :west  :south
@@ -27,12 +29,13 @@
        (update :y narrow)))
 
 (defn place [x y d]
-  (limit-movement {:x x :y y :d d}))
+  (when (dirs d)
+    (limit-movement {:x x :y y :d d})))
 
-(defn turn-left [robot]
+(defn left [robot]
   (update robot :d #(get left-map %)))
 
-(defn turn-right [robot]
+(defn right [robot]
   (update robot :d #(get right-map %)))
 
 (defn move [robot]
@@ -44,5 +47,5 @@
      :west  (update robot :x dec))))
 
 (defn report-status [robot]
-  (printf "%d,%d,%s\n" (:x robot) (:y robot) (name (:d robot)))
+  (printf "%d,%d,%s\n" (:x robot) (:y robot) (.toUpperCase (name (:d robot))))
   robot)

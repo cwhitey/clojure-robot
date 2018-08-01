@@ -31,9 +31,13 @@
         (is (= robot-south (move robot-south))))))
 
   (testing "left"
-    (is (= {:d :west} (turn-left {:d :north})))
-    (is (= {:d :north} (turn-left {:d :east}))))
+    (is (= {:d :west} (left {:d :north})))
+    (is (= {:d :north} (left {:d :east}))))
 
   (testing "right"
-    (is (= {:d :north} (turn-right {:d :west})))
-    (is (= {:d :east} (turn-right {:d :north})))))
+    (is (= {:d :north} (right {:d :west})))
+    (is (= {:d :east} (right {:d :north}))))
+
+  (testing "report"
+    (is (= "0,1,NORTH\n" (with-out-str
+                           (report-status {:x 0 :y 1 :d :north}))))))

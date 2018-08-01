@@ -1,11 +1,21 @@
 (ns clojure-robot.core
-  (:require [clojure-robot.robot :as r]))
+  (:require [clojure-robot.robot :as r]
+            [clojure-robot.util :refer :all]))
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!"))
 
-(defn run-command [command-string]
+(defn run-command [robot command-string]
   (condp re-find command-string
-    #"PLACE" (r/place 0 0 :north)))
+    #"PLACE (\d) (\d) (.*)" :>> (fn [[_ x y d]]
+                                  (r/place
+                                   (parse-int x)
+                                   (parse-int y)
+                                   (keyword (.toLowerCase d))))
+
+    #"MOVE"   (r/move robot)
+    #"LEFT"   (r/left robot)
+    #"RIGHT"  (r/right robot)
+    #"REPORT" (r/report-status robot)))
