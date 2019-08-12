@@ -2,18 +2,15 @@
   (:require [clojure-robot.robot :as r]
             [clojure-robot.util :refer :all]))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+(def place-re #"PLACE (\d) (\d) (.*)")
 
 (defn run-command [robot command-string]
   (condp re-find command-string
-    #"PLACE (\d) (\d) (.*)" :>> (fn [[_ x y d]]
-                                  (r/place
-                                   (parse-int x)
-                                   (parse-int y)
-                                   (keyword (.toLowerCase d))))
+    place-re :>> (fn [[_ x y d]]
+                   (r/place
+                    (parse-int x)
+                    (parse-int y)
+                    (keyword (.toLowerCase d))))
 
     #"MOVE"   (r/move robot)
     #"LEFT"   (r/left robot)
@@ -25,3 +22,8 @@
         commands (drop-while #(not (re-matches place-re %)) command-list)]
     commands
     #_(reduce run-command [] (clojure.string/split-lines commands))))
+
+(defn -main
+  "I don't do a whole lot ... yet."
+  [& args]
+  (println "Hello, World!"))

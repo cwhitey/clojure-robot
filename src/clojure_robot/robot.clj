@@ -25,8 +25,8 @@
 
 (defn limit-movement [robot]
   (-> robot
-       (update :x narrow)
-       (update :y narrow)))
+      (update :x narrow)
+      (update :y narrow)))
 
 (defn place [x y d]
   (when (dirs d)
