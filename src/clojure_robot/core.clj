@@ -19,3 +19,9 @@
     #"LEFT"   (r/left robot)
     #"RIGHT"  (r/right robot)
     #"REPORT" (r/report-status robot)))
+
+(defn run-program [program-string]
+  (let [command-list (clojure.string/split-lines program-string)
+        commands (drop-while #(not (re-matches place-re %)) command-list)]
+    commands
+    #_(reduce run-command [] (clojure.string/split-lines commands))))
